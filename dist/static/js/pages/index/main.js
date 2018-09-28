@@ -1,13 +1,13 @@
 global.webpackJsonp([5],{
 
-/***/ 74:
+/***/ 183:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__index__ = __webpack_require__(75);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__index__ = __webpack_require__(184);
 
 
 
@@ -16,18 +16,18 @@ app.$mount();
 
 /***/ }),
 
-/***/ 75:
+/***/ 184:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_mpvue_loader_1_0_13_mpvue_loader_lib_selector_type_script_index_0_index_vue__ = __webpack_require__(77);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_mpvue_loader_1_0_13_mpvue_loader_lib_template_compiler_index_id_data_v_0ce52447_hasScoped_true_transformToRequire_video_src_source_src_img_src_image_xlink_href_node_modules_mpvue_loader_1_0_13_mpvue_loader_lib_selector_type_template_index_0_index_vue__ = __webpack_require__(78);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_mpvue_loader_1_0_13_mpvue_loader_lib_selector_type_script_index_0_index_vue__ = __webpack_require__(186);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_mpvue_loader_1_0_13_mpvue_loader_lib_template_compiler_index_id_data_v_0ce52447_hasScoped_true_transformToRequire_video_src_source_src_img_src_image_xlink_href_node_modules_mpvue_loader_1_0_13_mpvue_loader_lib_selector_type_template_index_0_index_vue__ = __webpack_require__(187);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(76)
+  __webpack_require__(185)
 }
-var normalizeComponent = __webpack_require__(0)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 
 /* template */
@@ -70,22 +70,22 @@ if (false) {(function () {
 
 /***/ }),
 
-/***/ 76:
+/***/ 185:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 77:
+/***/ 186:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_mainTitle__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_indexCard__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_searchBox__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_mainTitle__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_indexCard__ = __webpack_require__(53);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_searchBox__ = __webpack_require__(19);
 
 //
 //
@@ -161,7 +161,7 @@ if (false) {(function () {
         success: function success(res) {
           if (res.code) {
             console.log(res);
-            var Fly = __webpack_require__(1);
+            var Fly = __webpack_require__(8);
             var fly = new Fly();
             fly.post(wx.getStorageSync("url") + "/wechatLogin", {
               code: res.code
@@ -183,7 +183,7 @@ if (false) {(function () {
     start_index: function start_index() {
       var _this2 = this;
 
-      var Fly = __webpack_require__(1);
+      var Fly = __webpack_require__(8);
       var fly = new Fly();
       var header = wx.getStorageSync("YX-SESSIONID");
       fly.interceptors.request.use(function (request) {
@@ -217,7 +217,7 @@ if (false) {(function () {
     toDetail: function toDetail(x) {
       var _this4 = this;
 
-      var Fly = __webpack_require__(1);
+      var Fly = __webpack_require__(8);
       var fly = new Fly();
       var header = wx.getStorageSync("YX-SESSIONID");
       fly.interceptors.request.use(function (request) {
@@ -285,12 +285,21 @@ if (false) {(function () {
     }
   },
   onShow: function onShow() {
-    // wx.setStorageSync("url", "https://feishou-baike.djiits.com");
-    wx.setStorageSync("url", "https://dj.majiangyun.com");
+
+    // 线上
+    wx.setStorageSync("url", "https://feishou-baike.djiits.com");
+    wx.setStorageSync("media_url", 'https://feishou-baike.djicdn.com');
+
+    // // 测试
+    // wx.setStorageSync("url", "https://dj.majiangyun.com");
+    // wx.setStorageSync("media_url",'https://bj-crm-wechat-mini-program-test.s3.cn-north-1.amazonaws.com.cn')
+
     wx.setStorageSync("search_page", "none");
     this.prePage = wx.getStorageSync("pre_page");
     if (this.prePage == "none") {
       this.animation = false;
+    } else {
+      this.exit();
     }
 
     if (this.prePage == "none") {
@@ -312,7 +321,7 @@ if (false) {(function () {
 
 /***/ }),
 
-/***/ 78:
+/***/ 187:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -376,5 +385,5 @@ if (false) {
 
 /***/ })
 
-},[74]);
+},[183]);
 //# sourceMappingURL=main.js.map

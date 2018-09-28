@@ -6,7 +6,6 @@
     "pages/explain/main",
     "pages/loading/main",
     "pages/player/main",
-    "pages/search_back/main",
     "pages/search/main"
   ],
   "plugins": {
