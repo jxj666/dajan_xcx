@@ -1,13 +1,13 @@
-global.webpackJsonp([5],{
+global.webpackJsonp([2],{
 
-/***/ 183:
+/***/ 74:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__index__ = __webpack_require__(184);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__index__ = __webpack_require__(75);
 
 
 
@@ -16,18 +16,18 @@ app.$mount();
 
 /***/ }),
 
-/***/ 184:
+/***/ 75:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_mpvue_loader_1_0_13_mpvue_loader_lib_selector_type_script_index_0_index_vue__ = __webpack_require__(186);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_mpvue_loader_1_0_13_mpvue_loader_lib_template_compiler_index_id_data_v_0ce52447_hasScoped_true_transformToRequire_video_src_source_src_img_src_image_xlink_href_node_modules_mpvue_loader_1_0_13_mpvue_loader_lib_selector_type_template_index_0_index_vue__ = __webpack_require__(187);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_mpvue_loader_1_0_13_mpvue_loader_lib_selector_type_script_index_0_index_vue__ = __webpack_require__(77);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_mpvue_loader_1_0_13_mpvue_loader_lib_template_compiler_index_id_data_v_0ce52447_hasScoped_true_transformToRequire_video_src_source_src_img_src_image_xlink_href_node_modules_mpvue_loader_1_0_13_mpvue_loader_lib_selector_type_template_index_0_index_vue__ = __webpack_require__(79);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(185)
+  __webpack_require__(76)
 }
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
 
 /* template */
@@ -70,22 +70,22 @@ if (false) {(function () {
 
 /***/ }),
 
-/***/ 185:
+/***/ 76:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 186:
+/***/ 77:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_mainTitle__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_indexCard__ = __webpack_require__(53);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_searchBox__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_mainTitle__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_indexCard__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_searchBox__ = __webpack_require__(5);
 
 //
 //
@@ -119,7 +119,8 @@ if (false) {(function () {
       listHide: false,
       hideSearch: false,
       searchNew: 0,
-      animation: true
+      animation: true,
+      title: "大疆飞手百科"
     };
   },
 
@@ -149,7 +150,7 @@ if (false) {(function () {
       }
       wx.setStorageSync("pre_page", "none");
       wx.setNavigationBarTitle({
-        title: "大疆飞手百科" //页面标题为路由参数
+        title: this.title
       });
       this.getList();
     },
@@ -161,7 +162,7 @@ if (false) {(function () {
         success: function success(res) {
           if (res.code) {
             console.log(res);
-            var Fly = __webpack_require__(8);
+            var Fly = __webpack_require__(1);
             var fly = new Fly();
             fly.post(wx.getStorageSync("url") + "/wechatLogin", {
               code: res.code
@@ -183,7 +184,7 @@ if (false) {(function () {
     start_index: function start_index() {
       var _this2 = this;
 
-      var Fly = __webpack_require__(8);
+      var Fly = __webpack_require__(1);
       var fly = new Fly();
       var header = wx.getStorageSync("YX-SESSIONID");
       fly.interceptors.request.use(function (request) {
@@ -217,7 +218,7 @@ if (false) {(function () {
     toDetail: function toDetail(x) {
       var _this4 = this;
 
-      var Fly = __webpack_require__(8);
+      var Fly = __webpack_require__(1);
       var fly = new Fly();
       var header = wx.getStorageSync("YX-SESSIONID");
       fly.interceptors.request.use(function (request) {
@@ -231,13 +232,6 @@ if (false) {(function () {
           key: "goods",
           data: __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify___default()(x)
         });
-        // var arr = wx.getStorageSync("data_box");
-        // arr.push({
-        //   pre_page: this.thisPage,
-        //   pre_data: d.data,
-        //   page: "childIndex"
-        // });
-        // wx.setStorageSync("data_box", arr);
         wx.setStorageSync("pre_page", _this4.thisPage);
 
         var url;
@@ -285,10 +279,16 @@ if (false) {(function () {
     }
   },
   onShow: function onShow() {
+    wx.showShareMenu({
+      withShareTicket: false,
+      success: function success() {},
+      fail: function fail() {},
+      complete: function complete() {}
+    });
 
     // 线上
     wx.setStorageSync("url", "https://feishou-baike.djiits.com");
-    wx.setStorageSync("media_url", 'https://feishou-baike.djicdn.com');
+    wx.setStorageSync("media_url", "https://feishou-baike.djicdn.com");
 
     // // 测试
     // wx.setStorageSync("url", "https://dj.majiangyun.com");
@@ -310,18 +310,159 @@ if (false) {(function () {
       this.get_user();
     }
   },
-  onLoad: function onLoad() {},
   onHide: function onHide() {
     this.exit();
   },
   onUnload: function onUnload() {
     this.exit();
+  },
+
+  onShareAppMessage: function onShareAppMessage() {
+    console.log(this.title);
+    return {
+      title: this.title,
+      path: ""
+    };
+  },
+  onLoad: function onLoad() {
+    var mta = __webpack_require__(78);
+    mta.App.init({
+      appID: "500649139",
+      // eventID: "500015824", // 高级功能-自定义事件统计ID，配置开通后在初始化处填写
+      lauchOpts: {}, //渠道分析,需在onLaunch方法传入options,如onLaunch:function(options){...}
+      statPullDownFresh: true, // 使用分析-下拉刷新次数/人数，必须先开通自定义事件，并配置了合法的eventID
+      statShareApp: true, // 使用分析-分享次数/人数，必须先开通自定义事件，并配置了合法的eventID
+      statReachBottom: true // 使用分析-页面触底次数/人数，必须先开通自定义事件，并配置了合法的eventID
+    });
+    mta.Page.init();
   }
 });
 
 /***/ }),
 
-/***/ 187:
+/***/ 78:
+/***/ (function(module, exports) {
+
+var MTA_CONFIG = { app_id: "", event_id: "", api_base: "https://pingtas.qq.com/pingd", prefix: "_mta_", version: "1.3.6", stat_share_app: !1, stat_pull_down_fresh: !1, stat_reach_bottom: !1 };function getNetworkType(a) {
+  wx.getNetworkType({ success: function success(b) {
+      a(b.networkType);
+    } });
+}function getSystemInfo() {
+  var a = wx.getSystemInfoSync();return { adt: encodeURIComponent(a.model), scl: a.pixelRatio, scr: a.windowWidth + "x" + a.windowHeight, lg: a.language, fl: a.version, jv: encodeURIComponent(a.system), tz: encodeURIComponent(a.platform) };
+}
+function getUID() {
+  try {
+    return wx.getStorageSync(MTA_CONFIG.prefix + "auid");
+  } catch (a) {}
+}function setUID() {
+  try {
+    var a = getRandom();wx.setStorageSync(MTA_CONFIG.prefix + "auid", a);return a;
+  } catch (b) {}
+}function getSID() {
+  try {
+    return wx.getStorageSync(MTA_CONFIG.prefix + "ssid");
+  } catch (a) {}
+}function setSID() {
+  try {
+    var a = "s" + getRandom();wx.setStorageSync(MTA_CONFIG.prefix + "ssid", a);return a;
+  } catch (b) {}
+}
+function getRandom(a) {
+  for (var b = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], c = 10; 1 < c; c--) {
+    var d = Math.floor(10 * Math.random()),
+        f = b[d];b[d] = b[c - 1];b[c - 1] = f;
+  }for (c = d = 0; 5 > c; c++) {
+    d = 10 * d + b[c];
+  }return (a || "") + (d + "" + +new Date());
+}function getPagePath() {
+  try {
+    var a = getCurrentPages(),
+        b = "/";0 < a.length && (b = a.pop().__route__);return b;
+  } catch (c) {
+    console.log("get current page path error:" + c);
+  }
+}
+function getMainInfo() {
+  var a = { dm: "wechat.apps.xx", url: getPagePath(), pvi: "", si: "", ty: 0 };a.pvi = function () {
+    var b = getUID();b || (b = setUID(), a.ty = 1);return b;
+  }();a.si = function () {
+    var a = getSID();a || (a = setSID());return a;
+  }();return a;
+}function getBasicInfo() {
+  var a = getSystemInfo();getNetworkType(function (a) {
+    try {
+      wx.setStorageSync(MTA_CONFIG.prefix + "ntdata", a);
+    } catch (c) {}
+  });a.ct = wx.getStorageSync(MTA_CONFIG.prefix + "ntdata") || "4g";return a;
+}
+function getExtentInfo() {
+  var a = MTA.Data.userInfo;var b = [],
+      c;for (c in a) {
+    a.hasOwnProperty(c) && b.push(c + "=" + a[c]);
+  }a = b.join(";");return { r2: MTA_CONFIG.app_id, r4: "wx", ext: "v=" + MTA_CONFIG.version + (null !== a && "" !== a ? ";ui=" + encodeURIComponent(a) : "") };
+}
+var MTA = { App: { init: function init(a) {
+      "appID" in a && (MTA_CONFIG.app_id = a.appID);"eventID" in a && (MTA_CONFIG.event_id = a.eventID);"statShareApp" in a && (MTA_CONFIG.stat_share_app = a.statShareApp);"statPullDownFresh" in a && (MTA_CONFIG.stat_pull_down_fresh = a.statPullDownFresh);"statReachBottom" in a && (MTA_CONFIG.stat_reach_bottom = a.statReachBottom);setSID();try {
+        "lauchOpts" in a && (MTA.Data.lanchInfo = a.lauchOpts, MTA.Data.lanchInfo.landing = 1);
+      } catch (b) {}
+    } }, Page: { init: function init() {
+      var a = getCurrentPages()[getCurrentPages().length - 1];a.onShow && !function () {
+        var b = a.onShow;a.onShow = function () {
+          MTA.Page.stat();b.call(this, arguments);
+        };
+      }();MTA_CONFIG.stat_pull_down_fresh && a.onPullDownRefresh && !function () {
+        var b = a.onPullDownRefresh;a.onPullDownRefresh = function () {
+          MTA.Event.stat(MTA_CONFIG.prefix + "pulldownfresh", { url: a.__route__ });b.call(this, arguments);
+        };
+      }();MTA_CONFIG.stat_reach_bottom && a.onReachBottom && !function () {
+        var b = a.onReachBottom;a.onReachBottom = function () {
+          MTA.Event.stat(MTA_CONFIG.prefix + "reachbottom", { url: a.__route__ });b.call(this, arguments);
+        };
+      }();MTA_CONFIG.stat_share_app && a.onShareAppMessage && !function () {
+        var b = a.onShareAppMessage;a.onShareAppMessage = function () {
+          MTA.Event.stat(MTA_CONFIG.prefix + "shareapp", { url: a.__route__ });return b.call(this, arguments);
+        };
+      }();
+    }, multiStat: function multiStat(a, b) {
+      if (1 == b) MTA.Page.stat(a), !0;else {
+        var c = getCurrentPages()[getCurrentPages().length - 1];c.onShow && !function () {
+          var b = c.onShow;c.onShow = function () {
+            MTA.Page.stat(a);b.call(this, arguments);
+          };
+        }();
+      }
+    }, stat: function stat(a) {
+      if ("" != MTA_CONFIG.app_id) {
+        var b = [],
+            c = getExtentInfo();
+        a && (c.r2 = a);a = [getMainInfo(), c, getBasicInfo()];if (MTA.Data.lanchInfo) {
+          a.push({ ht: MTA.Data.lanchInfo.scene, rdm: "/", rurl: MTA.Data.lanchInfo.path });MTA.Data.lanchInfo.query && MTA.Data.lanchInfo.query._mta_ref_id && a.push({ rarg: MTA.Data.lanchInfo.query._mta_ref_id });try {
+            1 == MTA.Data.lanchInfo.landing && (c.ext += ";lp=1", MTA.Data.lanchInfo.landing = 0);
+          } catch (e) {}
+        }a.push({ rand: +new Date() });c = 0;for (var d = a.length; c < d; c++) {
+          for (var f in a[c]) {
+            a[c].hasOwnProperty(f) && b.push(f + "=" + ("undefined" == typeof a[c][f] ? "" : a[c][f]));
+          }
+        }wx.request({ url: MTA_CONFIG.api_base + "?" + b.join("&").toLowerCase() });
+      }
+    } }, Event: { stat: function stat(a, b) {
+      if ("" != MTA_CONFIG.event_id) {
+        var c = [],
+            d = getMainInfo(),
+            f = getExtentInfo();d.dm = "wxapps.click";d.url = a;f.r2 = MTA_CONFIG.event_id;var e = "undefined" === typeof b ? {} : b;var k = [],
+            g;for (g in e) {
+          e.hasOwnProperty(g) && k.push(encodeURIComponent(g) + "=" + encodeURIComponent(e[g]));
+        }e = k.join(";");f.r5 = e;e = 0;d = [d, f, getBasicInfo(), { rand: +new Date() }];for (f = d.length; e < f; e++) {
+          for (var h in d[e]) {
+            d[e].hasOwnProperty(h) && c.push(h + "=" + ("undefined" == typeof d[e][h] ? "" : d[e][h]));
+          }
+        }wx.request({ url: MTA_CONFIG.api_base + "?" + c.join("&").toLowerCase() });
+      }
+    } }, Data: { userInfo: null, lanchInfo: null } };module.exports = MTA;
+
+/***/ }),
+
+/***/ 79:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -385,5 +526,5 @@ if (false) {
 
 /***/ })
 
-},[183]);
+},[74]);
 //# sourceMappingURL=main.js.map

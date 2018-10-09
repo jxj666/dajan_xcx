@@ -1,13 +1,13 @@
-global.webpackJsonp([7],{
+global.webpackJsonp([5],{
 
-/***/ 141:
+/***/ 21:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__index__ = __webpack_require__(142);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__index__ = __webpack_require__(22);
 
 
 
@@ -16,18 +16,18 @@ app.$mount();
 
 /***/ }),
 
-/***/ 142:
+/***/ 22:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_mpvue_loader_1_0_13_mpvue_loader_lib_selector_type_script_index_0_index_vue__ = __webpack_require__(144);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_mpvue_loader_1_0_13_mpvue_loader_lib_template_compiler_index_id_data_v_62865e17_hasScoped_true_transformToRequire_video_src_source_src_img_src_image_xlink_href_node_modules_mpvue_loader_1_0_13_mpvue_loader_lib_selector_type_template_index_0_index_vue__ = __webpack_require__(166);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_mpvue_loader_1_0_13_mpvue_loader_lib_selector_type_script_index_0_index_vue__ = __webpack_require__(24);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_mpvue_loader_1_0_13_mpvue_loader_lib_template_compiler_index_id_data_v_62865e17_hasScoped_true_transformToRequire_video_src_source_src_img_src_image_xlink_href_node_modules_mpvue_loader_1_0_13_mpvue_loader_lib_selector_type_template_index_0_index_vue__ = __webpack_require__(47);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(143)
+  __webpack_require__(23)
 }
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
 
 /* template */
@@ -70,23 +70,23 @@ if (false) {(function () {
 
 /***/ }),
 
-/***/ 143:
+/***/ 23:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 144:
+/***/ 24:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_mainTitle__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_indexCard__ = __webpack_require__(53);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_searchBox__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_station__ = __webpack_require__(33);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_mainTitle__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_indexCard__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_searchBox__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_station__ = __webpack_require__(6);
 
 //
 //
@@ -125,7 +125,8 @@ if (false) {(function () {
       dataList: [],
       hideSearch: false,
       searchNew: 0,
-      animation: true
+      animation: true,
+      title: ''
     };
   },
 
@@ -165,27 +166,21 @@ if (false) {(function () {
     toDetail: function toDetail(x) {
       var _this3 = this;
 
-      var Fly = __webpack_require__(8);
+      var Fly = __webpack_require__(1);
       var fly = new Fly();
       var header = wx.getStorageSync("YX-SESSIONID");
       fly.interceptors.request.use(function (request) {
         request.headers["YX-SESSIONID"] = header;
         return request;
       });
-      fly.get(wx.getStorageSync('url') + "/type/" + x.id, {}).then(function (d) {
+      fly.get(wx.getStorageSync("url") + "/type/" + x.id, {}).then(function (d) {
         //输出请求数据
         console.log("req", d.data);
         wx.setStorage({
           key: "goods",
           data: __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify___default()(x)
         });
-        // var arr = wx.getStorageSync("data_box");
-        // arr.push({
-        //   pre_page: this.thisPage,
-        //   pre_data: d.data,
-        //   page: "explain"
-        // });
-        // wx.setStorageSync("data_box", arr);
+
         wx.setStorageSync("pre_page", _this3.thisPage);
         var url;
         if (d.data.data.type == "series") {
@@ -226,6 +221,13 @@ if (false) {(function () {
   },
   created: function created() {},
   onShow: function onShow() {
+    wx.showShareMenu({
+      withShareTicket: false,
+      success: function success() {},
+      fail: function fail() {},
+      complete: function complete() {}
+    });
+
     this.prePage = wx.getStorageSync("pre_page");
     if (this.prePage == "none") {
       this.animation = false;
@@ -236,11 +238,12 @@ if (false) {(function () {
     var data = wx.getStorageSync("childIndex");
     console.log(data);
     this.dataList = data.data.data.list;
+    this.title = data.title || '大疆飞手百科';
 
     wx.setStorageSync("pre_page", "none");
 
     wx.setNavigationBarTitle({
-      title: this.escape2Html(data.title) //页面标题为路由参数
+      title: this.escape2Html(this.title) //页面标题为路由参数
     });
     this.getList();
   },
@@ -249,12 +252,20 @@ if (false) {(function () {
   },
   onUnload: function onUnload() {
     this.exit();
+  },
+
+  onShareAppMessage: function onShareAppMessage() {
+    console.log(this.title);
+    return {
+      title: this.title,
+      path: ""
+    };
   }
 });
 
 /***/ }),
 
-/***/ 166:
+/***/ 47:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -321,5 +332,5 @@ if (false) {
 
 /***/ })
 
-},[141]);
+},[21]);
 //# sourceMappingURL=main.js.map
