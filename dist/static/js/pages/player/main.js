@@ -129,8 +129,6 @@ if (false) {(function () {
 //
 //
 //
-//
-//
 
 
 
@@ -157,7 +155,8 @@ if (false) {(function () {
       vid: "w0766f4ngw3",
       playerObj: {},
       autoplay: false,
-      title: ""
+      title: "",
+      shareImg: ""
     };
   },
 
@@ -175,10 +174,23 @@ if (false) {(function () {
       } else {
         return "";
       }
+    },
+    scrollHeight_fix: function scrollHeight_fix() {
+      var rule = 750 / wx.getSystemInfoSync().windowWidth;
+      var height = wx.getSystemInfoSync().windowHeight;
+      this.scrollHeight = height * rule - (103 + 423) + "rpx";
+      return height * rule - (103 + 423) + "rpx";
     }
   },
 
   methods: {
+    escape2Html: function escape2Html(str) {
+      str = str || "";
+      var arrEntities = { lt: "<", gt: ">", nbsp: " ", amp: "&", quot: '"' };
+      return str.replace(/&(lt|gt|nbsp|amp|quot);/gi, function (all, t) {
+        return arrEntities[t];
+      });
+    },
     toSearch: function toSearch() {
       var _this = this;
 
@@ -191,11 +203,6 @@ if (false) {(function () {
       }, 500);
     },
     getList: function getList(bol) {
-      if (bol) {
-        var rule = 750 / wx.getSystemInfoSync().windowWidth;
-        var height = wx.getSystemInfoSync().windowHeight;
-        this.scrollHeight = height * rule - (103 + 423) + "rpx";
-      }
       var that = this;
       wx.getNetworkType({
         success: function success(res) {
@@ -229,10 +236,15 @@ if (false) {(function () {
         data: this.dataList,
         video: x
       });
-
       var data = wx.getStorageSync("player");
       this.dataList = data.data;
       this.playerObj = data.video;
+      this.title = this.escape2Html(data.video.typeTitle) || this.escape2Html(data.video.title);
+      this.shareImg = wx.getStorageSync("media_url") + "/" + data.video.image_url;
+      wx.setStorageSync("pre_page", "none");
+      wx.setNavigationBarTitle({
+        title: this.title //页面标题为路由参数
+      });
 
       wx.setStorageSync("pre_page", "none");
       var Fly = __webpack_require__(1);
@@ -253,60 +265,146 @@ if (false) {(function () {
       this.getList(true);
     },
     exit: function exit() {
-      var SP = wx.getStorageSync("search_page");
-      console.log(SP);
-      if (SP) {
-        wx.setStorageSync("search_page", false);
-        return;
-      }
+      // var SP = wx.getStorageSync("search_page");
+      // console.log(SP);
+      // if (SP) {
+      //   wx.setStorageSync("search_page", false);
+      //   return;
+      // }
       this.leftNone = false;
       this.listShow = true;
       this.listHide = false;
       this.dataList = [];
       this.hideSearch = false;
+
+      this._watchers = [];
+    },
+    showStart: function showStart() {
+      wx.showShareMenu({
+        withShareTicket: false,
+        success: function success() {},
+        fail: function fail() {},
+        complete: function complete() {}
+      });
+      this.prePage = wx.getStorageSync("pre_page");
+      if (this.prePage == "none") {
+        this.animation = false;
+      } else {
+        this.exit();
+      }
+      var data = wx.getStorageSync("player");
+      this.dataList = data.data;
+      this.playerObj = data.video;
+      this.title = this.escape2Html(data.video.typeTitle) || this.escape2Html(data.video.title);
+      this.shareImg = wx.getStorageSync("media_url") + "/" + data.video.image_url;
+      wx.setStorageSync("pre_page", "none");
+      wx.setNavigationBarTitle({
+        title: this.title //页面标题为路由参数
+      });
+
+      var Fly = __webpack_require__(1);
+      var fly = new Fly();
+      var header = wx.getStorageSync("YX-SESSIONID");
+      fly.interceptors.request.use(function (request) {
+        request.headers["YX-SESSIONID"] = header;
+        return request;
+      });
+      fly.post(wx.getStorageSync("url") + "/uploadProductStatic", {
+        productId: this.playerObj.id
+      }).then(function (d) {
+        //输出请求数据
+        console.log("req", d.data);
+      }).catch(function (err) {
+        console.log(err.status, err.message);
+      });
+      this.getList();
+    },
+    showDetail_search: function showDetail_search(options) {
+      var _this2 = this;
+
+      var x = options.key1;
+      if (!x) {
+        return;
+      }
+      var Fly = __webpack_require__(1);
+      var fly = new Fly();
+      var header = wx.getStorageSync("YX-SESSIONID");
+      fly.interceptors.request.use(function (request) {
+        request.headers["YX-SESSIONID"] = header;
+        return request;
+      });
+      wx.setStorageSync("searchText", x);
+      fly.get(wx.getStorageSync("url") + "/search", {
+        keyword: x
+      }).then(function (d) {
+        //输出请求数据
+        console.log("req", d.data);
+        if (d.data.data.list.length > 0) {
+          wx.setStorage({
+            key: "goods",
+            data: __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify___default()(x)
+          });
+          console.log(d);
+          if (_this2.searchPage != "search") {
+            wx.setStorageSync("search_page", _this2.searchPage);
+          } else {
+            wx.setStorageSync("search_page", false);
+          }
+          wx.setStorageSync("pre_page", _this2.searchPage);
+          wx.setStorageSync("search", {
+            data: d.data,
+            title: x
+          });
+        } else {
+          _this2.searchRes = false;
+          retrun;
+        }
+        _this2.showStart();
+      }).catch(function (err) {
+        console.log(err.status, err.message);
+      });
+    },
+    showDetail_explain: function showDetail_explain(options) {
+      var _this3 = this;
+
+      var x = {
+        id: options.key1,
+        title: options.title
+      };
+      var Fly = __webpack_require__(1);
+      var fly = new Fly();
+      var header = wx.getStorageSync("YX-SESSIONID");
+      fly.interceptors.request.use(function (request) {
+        request.headers["YX-SESSIONID"] = header;
+        return request;
+      });
+      fly.get(wx.getStorageSync("url") + "/type/" + x.id, {}).then(function (d) {
+        //输出请求数据
+        console.log("req", d.data);
+        wx.setStorage({
+          key: "goods",
+          data: __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify___default()(x)
+        });
+        wx.setStorageSync("pre_page", _this3.thisPage);
+        wx.setStorageSync("explain", {
+          data: d.data,
+          title: x.title
+        });
+        _this3.showStart();
+      }).catch(function (err) {
+        console.log(err.status, err.message);
+      });
     }
   },
 
   created: function created() {},
-  onShow: function onShow() {
-    wx.showShareMenu({
-      withShareTicket: false,
-      success: function success() {},
-      fail: function fail() {},
-      complete: function complete() {}
-    });
-
-    this.prePage = wx.getStorageSync("pre_page");
-    if (this.prePage == "none") {
-      this.animation = false;
-    } else {
-      this.exit();
+  onLoad: function onLoad() {
+    if (options.share) {
+      this.showDetail(options);
     }
-    var data = wx.getStorageSync("player");
-    this.dataList = data.data;
-    this.playerObj = data.video;
-    this.title = data.video.typeTitle || "视频展示";
-    wx.setStorageSync("pre_page", "none");
-    wx.setNavigationBarTitle({
-      title: this.title //页面标题为路由参数
-    });
-
-    var Fly = __webpack_require__(1);
-    var fly = new Fly();
-    var header = wx.getStorageSync("YX-SESSIONID");
-    fly.interceptors.request.use(function (request) {
-      request.headers["YX-SESSIONID"] = header;
-      return request;
-    });
-    fly.post(wx.getStorageSync("url") + "/uploadProductStatic", {
-      productId: this.playerObj.id
-    }).then(function (d) {
-      //输出请求数据
-      console.log("req", d.data);
-    }).catch(function (err) {
-      console.log(err.status, err.message);
-    });
-    this.getList();
+  },
+  onShow: function onShow() {
+    this.showStart();
   },
   onHide: function onHide() {
     this.exit();
@@ -316,10 +414,25 @@ if (false) {(function () {
   },
 
   onShareAppMessage: function onShareAppMessage() {
-    console.log(this.title);
+    var x1 = wx.getStorageSync("share_explain");
+    var x2 = wx.getStorageSync("share_search");
+    var x = wx.getStorageSync("share_player");
+    var id;
+    if (x.page = "search") {
+      id = x2.id;
+    } else {
+      id = x1.id;
+    }
+    var path = "/pages/player/main?share=true&page=" + x.page + "&key1=" + id + "&key2=" + x.video + "&title=" + this.title;
     return {
       title: this.title,
-      path: ""
+      path: path,
+      success: function success(res) {
+        console.log("转发成功!", res, path);
+      },
+      fail: function fail(res) {
+        console.log("转发失败!", res);
+      }
     };
   }
 });
@@ -486,7 +599,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
   }) : _vm._e()], 1), _vm._v(" "), _c('div', {
     staticClass: "listBox grid-var",
     style: ({
-      height: _vm.scrollHeight
+      height: _vm.scrollHeight_fix
     })
   }, [_c('scroll-view', {
     staticClass: "content",

@@ -125,7 +125,7 @@ if (false) {(function () {
       hideSearch: false,
       searchNew: 0,
       animation: true,
-      title: ''
+      title: ""
     };
   },
 
@@ -139,6 +139,8 @@ if (false) {(function () {
 
   methods: {
     escape2Html: function escape2Html(str) {
+      str = str || "";
+
       var arrEntities = { lt: "<", gt: ">", nbsp: " ", amp: "&", quot: '"' };
       return str.replace(/&(lt|gt|nbsp|amp|quot);/gi, function (all, t) {
         return arrEntities[t];
@@ -165,6 +167,7 @@ if (false) {(function () {
     toDetail: function toDetail(x) {
       var _this3 = this;
 
+      wx.setStorageSync("share_childIndex2", x);
       var Fly = __webpack_require__(1);
       var fly = new Fly();
       var header = wx.getStorageSync("YX-SESSIONID");
@@ -195,53 +198,94 @@ if (false) {(function () {
         });
 
         var url = "../explain/main";
+        wx.setStorageSync("share_explain", x);
+
         wx.navigateTo({ url: url });
       }).catch(function (err) {
         console.log(err.status, err.message);
       });
     },
+    showDetail: function showDetail(options) {
+      var _this4 = this;
+
+      var x = {
+        id: options.key1,
+        title: options.title
+      };
+      var Fly = __webpack_require__(1);
+      var fly = new Fly();
+      var header = wx.getStorageSync("YX-SESSIONID");
+      fly.interceptors.request.use(function (request) {
+        request.headers["YX-SESSIONID"] = header;
+        return request;
+      });
+      fly.get(wx.getStorageSync("url") + "/type/" + x.id, {}).then(function (d) {
+        //输出请求数据
+        console.log("req", d.data);
+        wx.setStorage({
+          key: "goods",
+          data: __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify___default()(x)
+        });
+
+        wx.setStorageSync("pre_page", _this4.thisPage);
+        var url;
+        if (d.data.data.type == "series") {
+          wx.setStorageSync("childIndex2", {
+            title: x.title,
+            data: d.data
+          });
+        } else {
+          wx.setStorageSync("explain", {
+            title: x.title,
+            data: d.data
+          });
+        }
+        _this4.showStart();
+      }).catch(function (err) {
+        console.log(err.status, err.message);
+      });
+    },
     exit: function exit() {
-      var SP = wx.getStorageSync("search_page");
-      console.log(SP);
-      if (SP) {
-        wx.setStorageSync("search_page", false);
-        return;
-      }
       this.leftNone = false;
       this.listShow = true;
       this.listHide = false;
       this.dataList = [];
       this.hideSearch = false;
       this.animation = true;
+      this._watchers = [];
+    },
+    showStart: function showStart() {
+      wx.showShareMenu({
+        withShareTicket: false,
+        success: function success() {},
+        fail: function fail() {},
+        complete: function complete() {}
+      });
+      this.prePage = wx.getStorageSync("pre_page");
+      if (this.prePage == "none") {
+        this.animation = false;
+      } else {
+        this.exit();
+      }
+      var data = wx.getStorageSync("childIndex2");
+      console.log(data);
+      this.dataList = data.data.data.list;
+      this.title = this.escape2Html(data.title) || "大疆飞手百科"; //页面标题为路由参数
+      wx.setStorageSync("pre_page", "none");
+      wx.setNavigationBarTitle({
+        title: this.title
+      });
+      this.getList();
     }
   },
   created: function created() {},
-  onShow: function onShow() {
-    wx.showShareMenu({
-      withShareTicket: false,
-      success: function success() {},
-      fail: function fail() {},
-      complete: function complete() {}
-    });
-
-    this.prePage = wx.getStorageSync("pre_page");
-    if (this.prePage == "none") {
-      this.animation = false;
-    } else {
-      this.exit();
+  onLoad: function onLoad(options) {
+    if (options.share) {
+      this.showDetail(options);
     }
-
-    var data = wx.getStorageSync("childIndex2");
-    console.log(data);
-    this.dataList = data.data.data.list;
-    this.title = this.escape2Html(data.title) || '大疆飞手百科'; //页面标题为路由参数
-
-    wx.setStorageSync("pre_page", "none");
-
-    wx.setNavigationBarTitle({
-      title: this.title
-    });
-    this.getList();
+  },
+  onShow: function onShow() {
+    this.showStart();
   },
   onHide: function onHide() {
     this.exit();
@@ -251,10 +295,17 @@ if (false) {(function () {
   },
 
   onShareAppMessage: function onShareAppMessage() {
-    console.log(this.title);
+    var x = wx.getStorageSync("share_childIndex2");
+    var path = "/pages/childIndex2/main?share=true&key1=" + x.id + "&title=" + this.title;
     return {
       title: this.title,
-      path: ""
+      path: path,
+      success: function success(res) {
+        console.log("转发成功!", res, path);
+      },
+      fail: function fail(res) {
+        console.log("转发失败!", res);
+      }
     };
   }
 });

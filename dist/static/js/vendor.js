@@ -7234,7 +7234,6 @@ if (false) {
     detailSearch: function detailSearch(x) {
       var _this2 = this;
 
-      console.log(x);
       if (!x) {
         return;
       }
@@ -7256,14 +7255,6 @@ if (false) {
             key: "goods",
             data: __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify___default()(x)
           });
-          // var arr = wx.getStorageSync("data_box");
-          // arr.push({
-          //   pre_page: this.thisPage,
-          //   pre_data: d.data,
-          //   page: "explain"
-          // });
-          // wx.setStorageSync("data_box", arr);
-          console.log(d);
           if (_this2.searchPage != "search") {
             wx.setStorageSync("search_page", _this2.searchPage);
           } else {
@@ -7274,8 +7265,12 @@ if (false) {
             data: d.data,
             title: x
           });
+          console.log("toSearch");
+
           var url = "../search/main";
-          wx.navigateTo({ url: url });
+          wx.setStorageSync("share_search", x);
+
+          wx.reLaunch({ url: url });
         } else {
           _this2.searchRes = false;
           retrun;
@@ -7914,6 +7909,7 @@ module.exports = function (it, key) {
   },
   methods: {
     toVideo: function toVideo() {
+      console.log('toVideo');
       this.$emit("toVideo", this.videos);
     }
   }

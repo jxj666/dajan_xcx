@@ -144,6 +144,7 @@ if (false) {(function () {
 
   methods: {
     escape2Html: function escape2Html(str) {
+      str = str || "";
       var arrEntities = { lt: "<", gt: ">", nbsp: " ", amp: "&", quot: '"' };
       return str.replace(/&(lt|gt|nbsp|amp|quot);/gi, function (all, t) {
         return arrEntities[t];
@@ -168,64 +169,110 @@ if (false) {(function () {
       wx.setStorageSync("pre_page", this.thisPage);
       wx.setStorageSync("player", {
         data: this.dataList,
-        video: x
+        video: x,
+        page: 'explain'
       });
       var url = "../player/main";
+      wx.setStorageSync("share_player", {
+        video: x,
+        page: 'explain'
+      });
       wx.navigateTo({
         url: url
       });
     },
-    getList: function getList() {
+    showDetail: function showDetail(options) {
       var _this2 = this;
+
+      var x = {
+        id: options.key1,
+        title: options.title
+      };
+      var Fly = __webpack_require__(1);
+      var fly = new Fly();
+      var header = wx.getStorageSync("YX-SESSIONID");
+      fly.interceptors.request.use(function (request) {
+        request.headers["YX-SESSIONID"] = header;
+        return request;
+      });
+      fly.get(wx.getStorageSync("url") + "/type/" + x.id, {}).then(function (d) {
+        //输出请求数据
+        console.log("req", d.data);
+        wx.setStorage({
+          key: "goods",
+          data: __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify___default()(x)
+        });
+        wx.setStorageSync("pre_page", _this2.thisPage);
+        wx.setStorageSync("explain", {
+          data: d.data,
+          title: x.title
+        });
+        _this2.showStart();
+      }).catch(function (err) {
+        console.log(err.status, err.message);
+      });
+    },
+    getList: function getList() {
+      var _this3 = this;
 
       this.leftNone = false;
       setTimeout(function () {
-        _this2.leftNone = true;
+        _this3.leftNone = true;
       }, 200);
     },
     exit: function exit() {
-      var SP = wx.getStorageSync("search_page");
-      console.log(SP);
-      if (SP) {
-        wx.setStorageSync("search_page", false);
-        return;
-      }
+      // var SP = wx.getStorageSync("search_page");
+      // console.log(SP);
+      // if (SP) {
+      //   wx.setStorageSync("search_page", false);
+      //   return;
+      // }
       this.leftNone = false;
       this.listShow = true;
       this.listHide = false;
       this.dataList = [];
       this.hideSearch = false;
       this.animation = true;
+
+      this._watchers = [];
+    },
+    showStart: function showStart() {
+      wx.showShareMenu({
+        withShareTicket: false,
+        success: function success() {},
+        fail: function fail() {},
+        complete: function complete() {}
+      });
+
+      this.searchText = wx.getStorageSync("searchText");
+      this.prePage = wx.getStorageSync("pre_page");
+
+      if (this.prePage == "none") {
+        this.animation = false;
+      } else {
+        this.exit();
+      }
+
+      var data = wx.getStorageSync("explain");
+      console.log("explain", data);
+      this.dataList = data.data.data.list;
+
+      wx.setStorageSync("pre_page", "none");
+      this.title = this.escape2Html(data.title) || "视频列表"; //页面标题为路由参数
+      wx.setNavigationBarTitle({
+        title: this.title
+      });
+      this.getList();
     }
   },
   created: function created() {},
-  onShow: function onShow() {
-    wx.showShareMenu({
-      withShareTicket: false,
-      success: function success() {},
-      fail: function fail() {},
-      complete: function complete() {}
-    });
-
-    this.searchText = wx.getStorageSync("searchText");
-    this.prePage = wx.getStorageSync("pre_page");
-
-    if (this.prePage == "none") {
-      this.animation = false;
-    } else {
-      this.exit();
+  onLoad: function onLoad() {
+    if (options.share) {
+      this.showDetail(options);
     }
-
-    var data = wx.getStorageSync("explain");
-    console.log("explain", data);
-    this.dataList = data.data.data.list;
-
-    wx.setStorageSync("pre_page", "none");
-    this.title = this.escape2Html(data.title) || "视频列表"; //页面标题为路由参数
-    wx.setNavigationBarTitle({
-      title: this.title
-    });
-    this.getList();
+  },
+  onShow: function onShow() {
+    this.showStart();
   },
   onHide: function onHide() {
     this.exit();
@@ -235,10 +282,17 @@ if (false) {(function () {
   },
 
   onShareAppMessage: function onShareAppMessage() {
-    console.log(this.title);
+    var x = wx.getStorageSync("share_explain");
+    var path = "/pages/explain/main?share=true&key1=" + x.id + "&title=" + this.title;
     return {
       title: this.title,
-      path: ""
+      path: path,
+      success: function success(res) {
+        console.log("转发成功!", res, path);
+      },
+      fail: function fail(res) {
+        console.log("转发失败!", res);
+      }
     };
   }
 });

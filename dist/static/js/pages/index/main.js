@@ -242,13 +242,14 @@ if (false) {(function () {
           });
 
           url = "../childIndex/main";
+          wx.setStorageSync("share_childIndex", x);
         } else {
           wx.setStorageSync("explain", {
             title: x.title,
             data: d.data
           });
-
           url = "../explain/main";
+          wx.setStorageSync("share_explain", x);
         }
         wx.navigateTo({ url: url });
       }).catch(function (err) {
@@ -264,20 +265,23 @@ if (false) {(function () {
       }, 200);
     },
     exit: function exit() {
-      var SP = wx.getStorageSync("search_page");
-      console.log(SP);
-      if (SP) {
-        wx.setStorageSync("search_page", false);
-        return;
-      }
+      // var SP = wx.getStorageSync("search_page");
+      // console.log(SP);
+      // if (SP) {
+      //   wx.setStorageSync("search_page", false);
+      //   return;
+      // }
       this.leftNone = false;
       this.listShow = true;
       this.listHide = false;
       this.dataList = [];
       this.hideSearch = false;
       this.animation = true;
+
+      this._watchers = [];
     }
   },
+
   onShow: function onShow() {
     wx.showShareMenu({
       withShareTicket: false,
@@ -321,7 +325,7 @@ if (false) {(function () {
     console.log(this.title);
     return {
       title: this.title,
-      path: ""
+      path: "/pages/index/main"
     };
   },
   onLoad: function onLoad() {

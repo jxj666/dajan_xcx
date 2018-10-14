@@ -114,8 +114,6 @@ if (false) {(function () {
 //
 //
 //
-//
-//
 
 
 
@@ -131,7 +129,7 @@ if (false) {(function () {
       prePage: undefined,
       leftNone: false,
       dataList: []
-    }, __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_defineProperty___default()(_ref, "prePage", undefined), __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_defineProperty___default()(_ref, "listShow", true), __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_defineProperty___default()(_ref, "listHide", false), __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_defineProperty___default()(_ref, "hideSearch", false), __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_defineProperty___default()(_ref, "searchNew", 0), __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_defineProperty___default()(_ref, "animation", true), __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_defineProperty___default()(_ref, "searchText", ""), __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_defineProperty___default()(_ref, "title", ''), _ref;
+    }, __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_defineProperty___default()(_ref, "prePage", undefined), __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_defineProperty___default()(_ref, "listShow", true), __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_defineProperty___default()(_ref, "listHide", false), __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_defineProperty___default()(_ref, "hideSearch", false), __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_defineProperty___default()(_ref, "searchNew", 0), __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_defineProperty___default()(_ref, "animation", true), __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_defineProperty___default()(_ref, "searchText", ""), __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_defineProperty___default()(_ref, "title", ""), _ref;
   },
 
 
@@ -144,6 +142,8 @@ if (false) {(function () {
 
   methods: {
     escape2Html: function escape2Html(str) {
+      str = str || "";
+
       var arrEntities = { lt: "<", gt: ">", nbsp: " ", amp: "&", quot: '"' };
       return str.replace(/&(lt|gt|nbsp|amp|quot);/gi, function (all, t) {
         return arrEntities[t];
@@ -171,61 +171,117 @@ if (false) {(function () {
         video: x
       });
       var url = "../player/main";
+      wx.setStorageSync("share_player", {
+        video: x,
+        page: "search"
+      });
       wx.navigateTo({
         url: url
       });
     },
-    getList: function getList() {
+    showDetail: function showDetail(options) {
       var _this2 = this;
+
+      var x = options.key1;
+      if (!x) {
+        return;
+      }
+      var Fly = __webpack_require__(1);
+      var fly = new Fly();
+      var header = wx.getStorageSync("YX-SESSIONID");
+      fly.interceptors.request.use(function (request) {
+        request.headers["YX-SESSIONID"] = header;
+        return request;
+      });
+      wx.setStorageSync("searchText", x);
+      fly.get(wx.getStorageSync("url") + "/search", {
+        keyword: x
+      }).then(function (d) {
+        //输出请求数据
+        console.log("req", d.data);
+        if (d.data.data.list.length > 0) {
+          wx.setStorage({
+            key: "goods",
+            data: __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify___default()(x)
+          });
+          console.log(d);
+          if (_this2.searchPage != "search") {
+            wx.setStorageSync("search_page", _this2.searchPage);
+          } else {
+            wx.setStorageSync("search_page", false);
+          }
+          wx.setStorageSync("pre_page", _this2.searchPage);
+          wx.setStorageSync("search", {
+            data: d.data,
+            title: x
+          });
+        } else {
+          _this2.searchRes = false;
+          retrun;
+        }
+        _this2.showStart();
+      }).catch(function (err) {
+        console.log(err.status, err.message);
+      });
+    },
+    getList: function getList() {
+      var _this3 = this;
 
       this.leftNone = false;
       setTimeout(function () {
-        _this2.leftNone = true;
+        _this3.leftNone = true;
       }, 200);
     },
     exit: function exit() {
-      var SP = wx.getStorageSync("search_page");
-      console.log(SP);
-      if (SP) {
-        wx.setStorageSync("search_page", false);
-        return;
-      }
+      // var SP = wx.getStorageSync("search_page");
+      // console.log(SP);
+      // if (SP) {
+      //   wx.setStorageSync("search_page", false);
+      //   return;
+      // }
       this.leftNone = false;
       this.listShow = true;
       this.listHide = false;
       this.dataList = [];
       this.hideSearch = false;
       this.animation = true;
+
+      this._watchers = [];
+    },
+    showStart: function showStart() {
+      wx.showShareMenu({
+        withShareTicket: false,
+        success: function success() {},
+        fail: function fail() {},
+        complete: function complete() {}
+      });
+
+      this.searchText = wx.getStorageSync("searchText");
+      this.prePage = wx.getStorageSync("pre_page");
+      if (this.prePage == "none") {
+        this.animation = false;
+      } else {
+        this.exit();
+      }
+      var data = wx.getStorageSync("search");
+      console.log("search", data);
+      this.dataList = data.data.data.list;
+      wx.setStorageSync("pre_page", "none");
+      this.title = this.escape2Html(data.title) || "搜索结果"; //页面标题为路由参数
+      wx.setNavigationBarTitle({
+        title: this.title
+      });
+      this.getList();
     }
   },
   created: function created() {},
-  onShow: function onShow() {
-    wx.showShareMenu({
-      withShareTicket: false,
-      success: function success() {},
-      fail: function fail() {},
-      complete: function complete() {}
-    });
-
-    this.searchText = wx.getStorageSync("searchText");
-    this.prePage = wx.getStorageSync("pre_page");
-
-    if (this.prePage == "none") {
-      this.animation = false;
-    } else {
-      this.exit();
+  onLoad: function onLoad(options) {
+    if (options.share) {
+      this.showDetail(options);
     }
-
-    var data = wx.getStorageSync("search");
-    console.log("search", data);
-    this.dataList = data.data.data.list;
-
-    wx.setStorageSync("pre_page", "none");
-    this.title = this.escape2Html(data.title) || "搜索结果"; //页面标题为路由参数
-    wx.setNavigationBarTitle({
-      title: this.title
-    });
-    this.getList();
+  },
+  onShow: function onShow() {
+    this.showStart();
   },
   onHide: function onHide() {
     this.exit();
@@ -235,10 +291,17 @@ if (false) {(function () {
   },
 
   onShareAppMessage: function onShareAppMessage() {
-    console.log(this.title);
+    var x = wx.getStorageSync("share_search");
+    var path = "/pages/search/main?share=true&key1=" + x + "&title=" + this.title;
     return {
       title: this.title,
-      path: ""
+      path: path,
+      success: function success(res) {
+        console.log("转发成功!", res, path);
+      },
+      fail: function fail(res) {
+        console.log("转发失败!", res);
+      }
     };
   }
 });
@@ -277,9 +340,9 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
     class: {
       listHide: _vm.listHide
     }
-  }, [(_vm.prePage == 'search') ? _c('div', {
+  }, [_c('div', {
     staticClass: "search"
-  }, [_vm._v("\n        “" + _vm._s(_vm.searchText) + "”搜索到 " + _vm._s(_vm.dataList.length) + " 条结果\n      ")]) : _vm._e(), _vm._v(" "), _c('div', _vm._l((_vm.dataList), function(x, key) {
+  }, [_vm._v("\n        “" + _vm._s(_vm.searchText) + "”搜索到 " + _vm._s(_vm.dataList.length) + " 条结果\n      ")]), _vm._v(" "), _c('div', _vm._l((_vm.dataList), function(x, key) {
     return _c('div', {
       key: key
     }, [_c('video-card', {

@@ -12,7 +12,7 @@
           <video wx:if="{{playerObj.class==3}}" id="showVideoBox3" objectFit="fill" src="{{playerObj.video_url}}" controls fixed="true" autoplay="{{autoplay}}" class="_video data-v-2e73f5bc {{[fixed ? 'fixedVideo' : '']}}"></video>
           <txv-video wx:if="{{playerObj.class ==1 }}" vid="{{playerObj.video_id}}" playerid="showVideoBox1" objectFit="fill" class="_txv-video data-v-2e73f5bc"></txv-video>
         </view>
-        <view class="_div data-v-2e73f5bc listBox grid-var" style=" {{('height:' + scrollHeight + ';')}}">
+        <view class="_div data-v-2e73f5bc listBox grid-var" style=" {{('height:' + scrollHeight_fix + ';')}}">
           <scroll-view class="_scroll-view data-v-2e73f5bc content" scroll-y="true">
             <template data="{{...$root[$kk+'2'], $root}}" is="textCard$187d6468"></template>
             <view wx:key="key" key="{{key}}" wx:for="{{dataList}}" wx:for-index="key" wx:for-item="x" class="_div data-v-2e73f5bc">
