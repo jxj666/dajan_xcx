@@ -170,12 +170,13 @@ if (false) {(function () {
       wx.setStorageSync("player", {
         data: this.dataList,
         video: x,
-        page: 'explain'
+        page: "explain"
       });
       var url = "../player/main";
+      wx.setStorageSync("share_player_video", x.id);
       wx.setStorageSync("share_player", {
         video: x,
-        page: 'explain'
+        page: "explain"
       });
       wx.navigateTo({
         url: url
@@ -266,12 +267,13 @@ if (false) {(function () {
     }
   },
   created: function created() {},
-  onLoad: function onLoad() {
+  onLoad: function onLoad(options) {
     if (options.share) {
       this.showDetail(options);
     }
   },
   onShow: function onShow() {
+    wx.setStorageSync("share_player_page", "explain");
     this.showStart();
   },
   onHide: function onHide() {

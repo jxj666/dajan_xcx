@@ -250,6 +250,7 @@ if (false) {(function () {
           });
           url = "../explain/main";
           wx.setStorageSync("share_explain", x);
+          wx.setStorageSync("share_player_list", x.id);
         }
         wx.navigateTo({ url: url });
       }).catch(function (err) {

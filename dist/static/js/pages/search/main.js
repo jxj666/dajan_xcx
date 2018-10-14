@@ -171,6 +171,8 @@ if (false) {(function () {
         video: x
       });
       var url = "../player/main";
+      wx.setStorageSync("share_player_video", x.id);
+
       wx.setStorageSync("share_player", {
         video: x,
         page: "search"
@@ -281,6 +283,8 @@ if (false) {(function () {
     }
   },
   onShow: function onShow() {
+    wx.setStorageSync("share_player_page", "search");
+
     this.showStart();
   },
   onHide: function onHide() {

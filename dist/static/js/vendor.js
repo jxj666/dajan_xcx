@@ -7269,7 +7269,7 @@ if (false) {
 
           var url = "../search/main";
           wx.setStorageSync("share_search", x);
-
+          wx.setStorageSync("share_player_list", x);
           wx.reLaunch({ url: url });
         } else {
           _this2.searchRes = false;
@@ -7887,7 +7887,7 @@ module.exports = function (it, key) {
 //
 
 /* harmony default export */ __webpack_exports__["a"] = ({
-  props: ["videos", "index", "leftNone", 'animation'],
+  props: ["videos", "index", "leftNone", "animation"],
   computed: {
     imgBackground: function imgBackground() {
       return "#eee url('" + wx.getStorageSync("media_url") + "/" + this.videos.image_url + "') no-repeat center";
@@ -7909,7 +7909,7 @@ module.exports = function (it, key) {
   },
   methods: {
     toVideo: function toVideo() {
-      console.log('toVideo');
+      wx.setStorageSync("share_player_video", this.videos.id);
       this.$emit("toVideo", this.videos);
     }
   }

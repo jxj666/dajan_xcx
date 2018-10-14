@@ -322,10 +322,8 @@ if (false) {(function () {
     showDetail_search: function showDetail_search(options) {
       var _this2 = this;
 
+      console.log("showDetail_search");
       var x = options.key1;
-      if (!x) {
-        return;
-      }
       var Fly = __webpack_require__(1);
       var fly = new Fly();
       var header = wx.getStorageSync("YX-SESSIONID");
@@ -339,27 +337,13 @@ if (false) {(function () {
       }).then(function (d) {
         //输出请求数据
         console.log("req", d.data);
-        if (d.data.data.list.length > 0) {
-          wx.setStorage({
-            key: "goods",
-            data: __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify___default()(x)
-          });
-          console.log(d);
-          if (_this2.searchPage != "search") {
-            wx.setStorageSync("search_page", _this2.searchPage);
-          } else {
-            wx.setStorageSync("search_page", false);
-          }
-          wx.setStorageSync("pre_page", _this2.searchPage);
-          wx.setStorageSync("search", {
-            data: d.data,
-            title: x
-          });
-        } else {
-          _this2.searchRes = false;
-          retrun;
-        }
-        _this2.showStart();
+
+        wx.setStorage({
+          key: "goods",
+          data: __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify___default()(x)
+        });
+
+        _this2.share_toVideo(options, d.data.data.list);
       }).catch(function (err) {
         console.log(err.status, err.message);
       });
@@ -367,6 +351,7 @@ if (false) {(function () {
     showDetail_explain: function showDetail_explain(options) {
       var _this3 = this;
 
+      console.log("showDetail_explain");
       var x = {
         id: options.key1,
         title: options.title
@@ -380,27 +365,54 @@ if (false) {(function () {
       });
       fly.get(wx.getStorageSync("url") + "/type/" + x.id, {}).then(function (d) {
         //输出请求数据
-        console.log("req", d.data);
         wx.setStorage({
           key: "goods",
           data: __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify___default()(x)
         });
-        wx.setStorageSync("pre_page", _this3.thisPage);
-        wx.setStorageSync("explain", {
-          data: d.data,
-          title: x.title
-        });
-        _this3.showStart();
+        _this3.share_toVideo(options, d.data.data.list);
       }).catch(function (err) {
         console.log(err.status, err.message);
       });
+    },
+    share_toVideo: function share_toVideo(options, list) {
+      console.log(list);
+      var x_id = options.key2;
+      var x = {};
+      for (var i = 0; i < list.length; i++) {
+        if (x_id == list[i].id) {
+          var x = list[i];
+        }
+      }
+      wx.setStorage({
+        key: "video",
+        data: __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify___default()(x)
+      });
+      wx.setStorageSync("pre_page", this.thisPage);
+      wx.setStorageSync("player", {
+        data: list,
+        video: x,
+        page: "explain"
+      });
+      wx.setStorageSync("share_player", {
+        video: x
+      });
+      this.showStart();
     }
   },
 
   created: function created() {},
-  onLoad: function onLoad() {
+  onLoad: function onLoad(options) {
+    console.log("option", options);
+
     if (options.share) {
-      this.showDetail(options);
+      wx.setStorageSync("share_player", options.page);
+      wx.setStorageSync("share_player_list", options.key1);
+      wx.setStorageSync("share_player_video", options.key2);
+      if (options.page == "explain") {
+        this.showDetail_explain(options);
+      } else {
+        this.showDetail_search(options);
+      }
     }
   },
   onShow: function onShow() {
@@ -414,19 +426,14 @@ if (false) {(function () {
   },
 
   onShareAppMessage: function onShareAppMessage() {
-    var x1 = wx.getStorageSync("share_explain");
-    var x2 = wx.getStorageSync("share_search");
-    var x = wx.getStorageSync("share_player");
-    var id;
-    if (x.page = "search") {
-      id = x2.id;
-    } else {
-      id = x1.id;
-    }
-    var path = "/pages/player/main?share=true&page=" + x.page + "&key1=" + id + "&key2=" + x.video + "&title=" + this.title;
+    var page = wx.getStorageSync("share_player_page");
+    var key1 = wx.getStorageSync("share_player_list");
+    var key2 = wx.getStorageSync("share_player_video");
+    var path = "/pages/player/main?share=true&page=" + page + "&key1=" + key1 + "&key2=" + key2 + "&title=" + this.title;
     return {
       title: this.title,
       path: path,
+      imageUrl: this.shareImg,
       success: function success(res) {
         console.log("转发成功!", res, path);
       },
