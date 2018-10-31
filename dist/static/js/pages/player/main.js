@@ -129,6 +129,11 @@ if (false) {(function () {
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -402,9 +407,18 @@ if (false) {(function () {
 
   created: function created() {},
   onLoad: function onLoad(options) {
-    console.log("option", options);
+    // 线上
+    wx.setStorageSync("url", "https://feishou-baike.djiits.com");
+    wx.setStorageSync("media_url", "https://feishou-baike.djicdn.com");
+
+    wx.setStorageSync("options", options);
+  },
+  onShow: function onShow() {
+    var options = wx.getStorageSync("options");
+    wx.setStorageSync("options", {});
 
     if (options.share) {
+      console.log("/pages/player/main?share=true&page=" + options.page + "&key1=" + options.key1 + "&key2=" + options.key2 + "&title=" + options.title);
       wx.setStorageSync("share_player", options.page);
       wx.setStorageSync("share_player_list", options.key1);
       wx.setStorageSync("share_player_video", options.key2);
@@ -413,10 +427,9 @@ if (false) {(function () {
       } else {
         this.showDetail_search(options);
       }
+    } else {
+      this.showStart();
     }
-  },
-  onShow: function onShow() {
-    this.showStart();
   },
   onHide: function onHide() {
     this.exit();
@@ -613,7 +626,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
     attrs: {
       "scroll-y": "true"
     }
-  }, [_c('text-card', {
+  }, [_c('div', [_c('text-card', {
     attrs: {
       "video": _vm.playerObj,
       "mpcomid": '2'
@@ -633,7 +646,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
         "toVideo": _vm.toVideo
       }
     }) : _vm._e()], 1)
-  })], 2)], 1)]) : _vm._e(), _vm._v(" "), (_vm.listHide) ? _c('div', {
+  })], 2)])], 1)]) : _vm._e(), _vm._v(" "), (_vm.listHide) ? _c('div', {
     staticClass: "searchBox"
   }, [_c('search-box', {
     attrs: {

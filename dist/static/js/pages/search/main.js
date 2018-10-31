@@ -114,6 +114,11 @@ if (false) {(function () {
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -125,6 +130,8 @@ if (false) {(function () {
     var _ref;
 
     return _ref = {
+      loading: false,
+
       thisPage: "search",
       prePage: undefined,
       leftNone: false,
@@ -278,14 +285,26 @@ if (false) {(function () {
   },
   created: function created() {},
   onLoad: function onLoad(options) {
-    if (options.share) {
-      this.showDetail(options);
-    }
+    // 线上
+    wx.setStorageSync("url", "https://feishou-baike.djiits.com");
+    wx.setStorageSync("media_url", "https://feishou-baike.djicdn.com");
+
+    wx.setStorageSync("options", options);
   },
   onShow: function onShow() {
-    wx.setStorageSync("share_player_page", "search");
+    this.loading = false;
 
-    this.showStart();
+    var options = wx.getStorageSync("options");
+    wx.setStorageSync("options", {});
+    wx.setStorageSync("share_player_page", "search");
+    if (options.share) {
+      console.log("/pages/search/main?share=true&key1=" + options.key1 + "&title=" + options.title);
+      this.showDetail(options);
+    } else {
+      this.loading = true;
+
+      this.showStart();
+    }
   },
   onHide: function onHide() {
     this.exit();
@@ -319,7 +338,7 @@ if (false) {(function () {
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('scroll-view', {
     staticClass: "max_width"
-  }, [_c('main-title', {
+  }, [_c('div', [_c('main-title', {
     attrs: {
       "thisPage": _vm.thisPage,
       "hideSearch": _vm.hideSearch,
@@ -339,14 +358,14 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
       "searchNew": _vm.searchNew,
       "mpcomid": '1'
     }
-  })], 1) : _vm._e(), _vm._v(" "), (_vm.listShow) ? _c('div', {
+  })], 1) : _vm._e(), _vm._v(" "), (_vm.listShow && _vm.dataList.length > 0) ? _c('div', {
     staticClass: "listBox",
     class: {
       listHide: _vm.listHide
     }
   }, [_c('div', {
     staticClass: "search"
-  }, [_vm._v("\n        “" + _vm._s(_vm.searchText) + "”搜索到 " + _vm._s(_vm.dataList.length) + " 条结果\n      ")]), _vm._v(" "), _c('div', _vm._l((_vm.dataList), function(x, key) {
+  }, [_vm._v("\n          “" + _vm._s(_vm.searchText) + "”搜索到 " + _vm._s(_vm.dataList.length) + " 条结果\n        ")]), _vm._v(" "), _c('div', _vm._l((_vm.dataList), function(x, key) {
     return _c('div', {
       key: key
     }, [_c('video-card', {
@@ -362,11 +381,11 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
         "toVideo": _vm.toVideo
       }
     })], 1)
-  })), _vm._v(" "), (_vm.dataList.length == 0) ? _c('station', {
+  }))]) : _vm._e(), _vm._v(" "), (_vm.dataList.length == 0 && _vm.loading) ? _c('station', {
     attrs: {
       "mpcomid": '3'
     }
-  }) : _vm._e()], 1) : _vm._e()])], 1)
+  }) : _vm._e()], 1)], 1)])
 }
 var staticRenderFns = []
 render._withStripped = true

@@ -103,6 +103,11 @@ if (false) {(function () {
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -330,6 +335,10 @@ if (false) {(function () {
     };
   },
   onLoad: function onLoad() {
+    // 线上
+    wx.setStorageSync("url", "https://feishou-baike.djiits.com");
+    wx.setStorageSync("media_url", "https://feishou-baike.djicdn.com");
+
     var mta = __webpack_require__(78);
     mta.App.init({
       appID: "500649139",
@@ -473,8 +482,8 @@ var MTA = { App: { init: function init(a) {
 "use strict";
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('scroll-view', {
-    staticClass: "max_width"
-  }, [_c('main-title', {
+    staticClass: "scorll_box"
+  }, [_c('div', [_c('main-title', {
     attrs: {
       "thisPage": _vm.thisPage,
       "hideSearch": _vm.hideSearch,
@@ -516,7 +525,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
       "searchNew": _vm.searchNew,
       "mpcomid": '2'
     }
-  })], 1) : _vm._e()])], 1)
+  })], 1) : _vm._e()])], 1)])
 }
 var staticRenderFns = []
 render._withStripped = true

@@ -107,6 +107,8 @@ if (false) {(function () {
 //
 //
 //
+//
+//
 
 
 
@@ -116,6 +118,7 @@ if (false) {(function () {
 /* harmony default export */ __webpack_exports__["a"] = ({
   data: function data() {
     return {
+      loading: false,
       thisPage: "childIndex",
       dataPre: {},
       leftNone: false,
@@ -289,12 +292,25 @@ if (false) {(function () {
   },
   created: function created() {},
   onLoad: function onLoad(options) {
-    if (options.share) {
-      this.showDetail(options);
-    }
+    // 线上
+    wx.setStorageSync("url", "https://feishou-baike.djiits.com");
+    wx.setStorageSync("media_url", "https://feishou-baike.djicdn.com");
+
+    wx.setStorageSync("options", options);
   },
   onShow: function onShow() {
-    this.showStart();
+    this.loading = false;
+
+    var options = wx.getStorageSync("options");
+    wx.setStorageSync("options", {});
+    if (options.share) {
+      console.log("/pages/childIndex/main?share=true&key1=" + options.key1 + "&title=" + options.title);
+      this.showDetail(options);
+    } else {
+      this.loading = true;
+
+      this.showStart();
+    }
   },
   onHide: function onHide() {
     this.exit();
@@ -328,7 +344,7 @@ if (false) {(function () {
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('scroll-view', {
     staticClass: "max_width"
-  }, [_c('main-title', {
+  }, [_c('div', [_c('main-title', {
     attrs: {
       "thisPage": _vm.thisPage,
       "hideSearch": _vm.hideSearch,
@@ -361,7 +377,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
         "toDetail": _vm.toDetail
       }
     })], 1)
-  }), _vm._v(" "), (_vm.dataList.length == 0) ? _c('station', {
+  }), _vm._v(" "), (_vm.dataList.length == 0 && _vm.loading) ? _c('station', {
     attrs: {
       "mpcomid": '2'
     }
@@ -373,7 +389,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
       "searchPage": _vm.thisPage,
       "mpcomid": '3'
     }
-  })], 1) : _vm._e()])], 1)
+  })], 1) : _vm._e()])], 1)])
 }
 var staticRenderFns = []
 render._withStripped = true
