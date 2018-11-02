@@ -151,7 +151,13 @@ if (false) {(function () {
     escape2Html: function escape2Html(str) {
       str = str || "";
 
-      var arrEntities = { lt: "<", gt: ">", nbsp: " ", amp: "&", quot: '"' };
+      var arrEntities = {
+        lt: "<",
+        gt: ">",
+        nbsp: " ",
+        amp: "&",
+        quot: '"'
+      };
       return str.replace(/&(lt|gt|nbsp|amp|quot);/gi, function (all, t) {
         return arrEntities[t];
       });
@@ -281,15 +287,40 @@ if (false) {(function () {
         title: this.title
       });
       this.getList();
+    },
+
+    getQueryString: function getQueryString(url, name) {
+      console.log("url = " + url);
+      console.log("name = " + name);
+      var reg = new RegExp('(^|&|/?)' + name + '=([^&|/?]*)(&|/?|$)', 'i');
+      var r = url.substr(1).match(reg);
+      if (r != null) {
+        console.log("r = " + r);
+        console.log("r[2] = " + r[2]);
+        return r[2];
+      }
+      return null;
     }
   },
   created: function created() {},
   onLoad: function onLoad(options) {
+    console.log('options', options);
+
     // 线上
     wx.setStorageSync("url", "https://feishou-baike.djiits.com");
     wx.setStorageSync("media_url", "https://feishou-baike.djicdn.com");
+    if (options.q) {
+      var q = decodeURIComponent(options.q);
+      wx.setStorageSync("options", {
+        share: true,
+        key1: this.getQueryString(q, 'key1'),
+        key2: this.getQueryString(q, 'key2'),
 
-    wx.setStorageSync("options", options);
+        title: this.getQueryString(q, 'title')
+      });
+    } else {
+      wx.setStorageSync("options", options);
+    }
   },
   onShow: function onShow() {
     this.loading = false;

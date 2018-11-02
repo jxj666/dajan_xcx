@@ -150,7 +150,13 @@ if (false) {(function () {
   methods: {
     escape2Html: function escape2Html(str) {
       str = str || "";
-      var arrEntities = { lt: "<", gt: ">", nbsp: " ", amp: "&", quot: '"' };
+      var arrEntities = {
+        lt: "<",
+        gt: ">",
+        nbsp: " ",
+        amp: "&",
+        quot: '"'
+      };
       return str.replace(/&(lt|gt|nbsp|amp|quot);/gi, function (all, t) {
         return arrEntities[t];
       });
@@ -269,16 +275,39 @@ if (false) {(function () {
         title: this.title
       });
       this.getList();
+    },
+
+    getQueryString: function getQueryString(url, name) {
+      console.log("url = " + url);
+      console.log("name = " + name);
+      var reg = new RegExp('(^|&|/?)' + name + '=([^&|/?]*)(&|/?|$)', 'i');
+      var r = url.substr(1).match(reg);
+      if (r != null) {
+        console.log("r = " + r);
+        console.log("r[2] = " + r[2]);
+        return r[2];
+      }
+      return null;
     }
   },
   created: function created() {},
   onLoad: function onLoad(options) {
+    console.log('options', options);
 
     // 线上
     wx.setStorageSync("url", "https://feishou-baike.djiits.com");
     wx.setStorageSync("media_url", "https://feishou-baike.djicdn.com");
 
-    wx.setStorageSync("options", options);
+    if (options.q) {
+      var q = decodeURIComponent(options.q);
+      wx.setStorageSync("options", {
+        share: true,
+        key1: this.getQueryString(q, 'key1'),
+        title: this.getQueryString(q, 'title')
+      });
+    } else {
+      wx.setStorageSync("options", options);
+    }
   },
   onShow: function onShow() {
     this.loading = false;
@@ -354,7 +383,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
     }
   }, [(_vm.prePage == 'search') ? _c('div', {
     staticClass: "search"
-  }, [_vm._v("\n        “" + _vm._s(_vm.searchText) + "”搜索到 " + _vm._s(_vm.dataList.length) + " 条结果\n      ")]) : _vm._e(), _vm._v(" "), _c('div', _vm._l((_vm.dataList), function(x, key) {
+  }, [_vm._v("\n          “" + _vm._s(_vm.searchText) + "”搜索到 " + _vm._s(_vm.dataList.length) + " 条结果\n        ")]) : _vm._e(), _vm._v(" "), _c('div', _vm._l((_vm.dataList), function(x, key) {
     return _c('div', {
       key: key
     }, [_c('video-card', {

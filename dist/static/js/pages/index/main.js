@@ -334,7 +334,9 @@ if (false) {(function () {
       path: "/pages/index/main"
     };
   },
-  onLoad: function onLoad() {
+  onLoad: function onLoad(options) {
+    console.log('options', options);
+
     // 线上
     wx.setStorageSync("url", "https://feishou-baike.djiits.com");
     wx.setStorageSync("media_url", "https://feishou-baike.djicdn.com");

@@ -146,7 +146,13 @@ if (false) {(function () {
     escape2Html: function escape2Html(str) {
       str = str || "";
 
-      var arrEntities = { lt: "<", gt: ">", nbsp: " ", amp: "&", quot: '"' };
+      var arrEntities = {
+        lt: "<",
+        gt: ">",
+        nbsp: " ",
+        amp: "&",
+        quot: '"'
+      };
       return str.replace(/&(lt|gt|nbsp|amp|quot);/gi, function (all, t) {
         return arrEntities[t];
       });
@@ -206,7 +212,9 @@ if (false) {(function () {
         wx.setStorageSync("share_explain", x);
         wx.setStorageSync("share_player_list", x.id);
 
-        wx.navigateTo({ url: url });
+        wx.navigateTo({
+          url: url
+        });
       }).catch(function (err) {
         console.log(err.status, err.message);
       });
@@ -282,16 +290,38 @@ if (false) {(function () {
         title: this.title
       });
       this.getList();
+    },
+
+    getQueryString: function getQueryString(url, name) {
+      console.log("url = " + url);
+      console.log("name = " + name);
+      var reg = new RegExp('(^|&|/?)' + name + '=([^&|/?]*)(&|/?|$)', 'i');
+      var r = url.substr(1).match(reg);
+      if (r != null) {
+        console.log("r = " + r);
+        console.log("r[2] = " + r[2]);
+        return r[2];
+      }
+      return null;
     }
   },
   created: function created() {},
   onLoad: function onLoad(options) {
-
+    console.log('options', options);
     // 线上
     wx.setStorageSync("url", "https://feishou-baike.djiits.com");
     wx.setStorageSync("media_url", "https://feishou-baike.djicdn.com");
 
-    wx.setStorageSync("options", options);
+    if (options.q) {
+      var q = decodeURIComponent(options.q);
+      wx.setStorageSync("options", {
+        share: true,
+        key1: this.getQueryString(q, 'key1'),
+        title: this.getQueryString(q, 'title')
+      });
+    } else {
+      wx.setStorageSync("options", options);
+    }
   },
   onShow: function onShow() {
     this.loading = false;
