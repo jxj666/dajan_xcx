@@ -299,13 +299,9 @@ if (false) {(function () {
     },
 
     getQueryString: function getQueryString(url, name) {
-      console.log("url = " + url);
-      console.log("name = " + name);
       var reg = new RegExp("(^|&|/?)" + name + "=([^&|/?]*)(&|/?|$)", "i");
       var r = url.substr(1).match(reg);
       if (r != null) {
-        console.log("r = " + r);
-        console.log("r[2] = " + r[2]);
         return r[2];
       }
       return null;
@@ -322,7 +318,7 @@ if (false) {(function () {
       wx.setStorageSync("options", {
         share: true,
         key1: this.getQueryString(q, "key1"),
-        title: this.getQueryString(q, "title")
+        title: '大疆飞手百科'
       });
     } else {
       wx.setStorageSync("options", options);
@@ -331,9 +327,10 @@ if (false) {(function () {
   onShow: function onShow() {
     this.loading = false;
     var options = wx.getStorageSync("options");
+    console.log('k', options);
     wx.setStorageSync("options", {});
     if (options.share) {
-      console.log("/pages/childIndex/main?share=true&key1=" + options.key1 + "&title=" + options.title);
+      console.log("/pages/childIndex/main?share=true&key1=" + options.key1);
       this.showDetail(options);
     } else {
       this.loading = true;

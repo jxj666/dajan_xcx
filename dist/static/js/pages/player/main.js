@@ -413,13 +413,9 @@ if (false) {(function () {
     },
 
     getQueryString: function getQueryString(url, name) {
-      console.log("url = " + url);
-      console.log("name = " + name);
       var reg = new RegExp('(^|&|/?)' + name + '=([^&|/?]*)(&|/?|$)', 'i');
       var r = url.substr(1).match(reg);
       if (r != null) {
-        console.log("r = " + r);
-        console.log("r[2] = " + r[2]);
         return r[2];
       }
       return null;
@@ -441,7 +437,7 @@ if (false) {(function () {
         key1: this.getQueryString(q, 'key1'),
         key2: this.getQueryString(q, 'key2'),
 
-        title: this.getQueryString(q, 'title')
+        title: '大疆飞手百科'
       });
     } else {
       wx.setStorageSync("options", options);
@@ -449,10 +445,12 @@ if (false) {(function () {
   },
   onShow: function onShow() {
     var options = wx.getStorageSync("options");
+    console.log('k', options);
+
     wx.setStorageSync("options", {});
 
     if (options.share) {
-      console.log("/pages/player/main?share=true&page=" + options.page + "&key1=" + options.key1 + "&key2=" + options.key2 + "&title=" + options.title);
+      console.log("/pages/player/main?share=true&page=" + options.page + "&key1=" + options.key1 + "&key2=" + options.key2);
       wx.setStorageSync("share_player", options.page);
       wx.setStorageSync("share_player_list", options.key1);
       wx.setStorageSync("share_player_video", options.key2);
