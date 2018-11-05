@@ -318,7 +318,7 @@ if (false) {(function () {
       wx.setStorageSync("options", {
         share: true,
         key1: this.getQueryString(q, "key1"),
-        title: '大疆飞手百科'
+        title: "大疆飞手百科"
       });
     } else {
       wx.setStorageSync("options", options);
@@ -327,10 +327,11 @@ if (false) {(function () {
   onShow: function onShow() {
     this.loading = false;
     var options = wx.getStorageSync("options");
-    console.log('k', options);
+    console.log("k", options);
     wx.setStorageSync("options", {});
     if (options.share) {
       console.log("/pages/childIndex/main?share=true&key1=" + options.key1);
+      wx.setStorageSync("o_key1", options.key1);
       this.showDetail(options);
     } else {
       this.loading = true;
@@ -346,7 +347,10 @@ if (false) {(function () {
   },
 
   onShareAppMessage: function onShareAppMessage() {
-    var x = wx.getStorageSync("share_childIndex");
+    var x = wx.getStorageSync("share_childIndex") || {};
+    if (!x.id) {
+      x.id = wx.getStorageSync("o_key1");
+    }
     var path = "/pages/childIndex/main?share=true&key1=" + x.id + "&title=" + this.title;
     return {
       title: this.title,

@@ -328,7 +328,6 @@ if (false) {(function () {
   },
 
   onShareAppMessage: function onShareAppMessage() {
-    console.log(this.title);
     return {
       title: this.title,
       path: "/pages/index/main"

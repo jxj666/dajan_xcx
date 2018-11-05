@@ -315,10 +315,11 @@ if (false) {(function () {
     wx.setStorageSync("share_player_page", "explain");
     if (options.share) {
       console.log("/pages/explain/main?share=true&key1=" + options.key1);
+      wx.setStorageSync("o_key1", options.key1);
+
       this.showDetail(options);
     } else {
       this.loading = true;
-
       this.showStart();
     }
   },
@@ -330,7 +331,11 @@ if (false) {(function () {
   },
 
   onShareAppMessage: function onShareAppMessage() {
-    var x = wx.getStorageSync("share_explain");
+    var x = wx.getStorageSync("share_childIndex") || {};
+    if (!x.id) {
+      x.id = wx.getStorageSync("o_key1");
+    }
+
     var path = "/pages/explain/main?share=true&key1=" + x.id + "&title=" + this.title;
     return {
       title: this.title,

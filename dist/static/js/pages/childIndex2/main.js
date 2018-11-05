@@ -193,13 +193,6 @@ if (false) {(function () {
           key: "goods",
           data: __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify___default()(x)
         });
-        // var arr = wx.getStorageSync("data_box");
-        // arr.push({
-        //   pre_page: this.thisPage,
-        //   pre_data: d.data,
-        //   page: "explain"
-        // });
-        // wx.setStorageSync("data_box", arr);
 
         wx.setStorageSync("pre_page", _this3.thisPage);
 
@@ -329,6 +322,8 @@ if (false) {(function () {
 
     if (options.share) {
       console.log("/pages/childIndex2/main?share=true&key1=" + options.key1);
+      wx.setStorageSync("o_key1", options.key1);
+
       this.showDetail(options);
     } else {
       this.loading = true;
@@ -344,7 +339,10 @@ if (false) {(function () {
   },
 
   onShareAppMessage: function onShareAppMessage() {
-    var x = wx.getStorageSync("share_childIndex2");
+    var x = wx.getStorageSync("share_childIndex") || {};
+    if (!x.id) {
+      x.id = wx.getStorageSync("o_key1");
+    }
     var path = "/pages/childIndex2/main?share=true&key1=" + x.id + "&title=" + this.title;
     return {
       title: this.title,

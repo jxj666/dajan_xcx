@@ -134,8 +134,6 @@ if (false) {(function () {
 //
 //
 //
-//
-//
 
 
 
@@ -413,7 +411,7 @@ if (false) {(function () {
     },
 
     getQueryString: function getQueryString(url, name) {
-      var reg = new RegExp('(^|&|/?)' + name + '=([^&|/?]*)(&|/?|$)', 'i');
+      var reg = new RegExp("(^|&|/?)" + name + "=([^&|/?]*)(&|/?|$)", "i");
       var r = url.substr(1).match(reg);
       if (r != null) {
         return r[2];
@@ -424,7 +422,7 @@ if (false) {(function () {
 
   created: function created() {},
   onLoad: function onLoad(options) {
-    console.log('options', options);
+    console.log("options", options);
 
     // 线上
     wx.setStorageSync("url", "https://feishou-baike.djiits.com");
@@ -434,10 +432,10 @@ if (false) {(function () {
       var q = decodeURIComponent(options.q);
       wx.setStorageSync("options", {
         share: true,
-        key1: this.getQueryString(q, 'key1'),
-        key2: this.getQueryString(q, 'key2'),
-
-        title: '大疆飞手百科'
+        key1: this.getQueryString(q, "key1"),
+        key2: this.getQueryString(q, "key2"),
+        page: this.getQueryString(q, "page"),
+        title: "大疆飞手百科"
       });
     } else {
       wx.setStorageSync("options", options);
@@ -445,12 +443,16 @@ if (false) {(function () {
   },
   onShow: function onShow() {
     var options = wx.getStorageSync("options");
-    console.log('k', options);
+    console.log("k", options);
 
     wx.setStorageSync("options", {});
 
     if (options.share) {
       console.log("/pages/player/main?share=true&page=" + options.page + "&key1=" + options.key1 + "&key2=" + options.key2);
+      wx.setStorageSync("o_page", options.page);
+      wx.setStorageSync("o_key1", options.key1);
+      wx.setStorageSync("o_key2", options.key2);
+
       wx.setStorageSync("share_player", options.page);
       wx.setStorageSync("share_player_list", options.key1);
       wx.setStorageSync("share_player_video", options.key2);
@@ -471,9 +473,11 @@ if (false) {(function () {
   },
 
   onShareAppMessage: function onShareAppMessage() {
-    var page = wx.getStorageSync("share_player_page");
-    var key1 = wx.getStorageSync("share_player_list");
-    var key2 = wx.getStorageSync("share_player_video");
+
+    var page = wx.getStorageSync("share_player_page") || wx.getStorageSync("o_page");
+    var key1 = wx.getStorageSync("share_player_list") || wx.getStorageSync("o_key1");
+    var key2 = wx.getStorageSync("share_player_video") || wx.getStorageSync("o_key2");
+
     var path = "/pages/player/main?share=true&page=" + page + "&key1=" + key1 + "&key2=" + key2 + "&title=" + this.title;
     return {
       title: this.title,
