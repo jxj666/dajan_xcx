@@ -66,13 +66,13 @@
   margin: 0 auto;
 }
 .card ._h3.data-v-e348639a {
-  line-height: 40rpx;
-  height: 40rpx;
+  line-height: 60rpx;
+  height: 60rpx;
   font-size: 40rpx;
   overflow: hidden;
   font-family: PingFang-SC-Medium;
   color: #5e6262;
-  margin: 35rpx 0 30rpx;
+  margin: 25rpx 0 20rpx;
 }
 .card ._p.data-v-e348639a {
   font-size: 24rpx;

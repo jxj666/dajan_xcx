@@ -339,7 +339,7 @@ if (false) {(function () {
   },
 
   onShareAppMessage: function onShareAppMessage() {
-    var x = wx.getStorageSync("share_childIndex") || {};
+    var x = wx.getStorageSync("share_childIndex2") || {};
     if (!x.id) {
       x.id = wx.getStorageSync("o_key1");
     }

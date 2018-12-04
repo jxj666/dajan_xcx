@@ -15,6 +15,7 @@
           <template data="{{...$root[$kk+'2'], $root}}" is="searchBox$4acf9408"></template>
         </view>
       </view>
+      <official-account class="_official-account data-v-0ce52447"></official-account>
     </view>
   </scroll-view>
 </template>

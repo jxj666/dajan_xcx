@@ -196,6 +196,7 @@ if (false) {(function () {
     showDetail: function showDetail(options) {
       var _this2 = this;
 
+      console.log("req", options);
       var x = {
         id: options.key1,
         title: options.title
@@ -209,7 +210,7 @@ if (false) {(function () {
       });
       fly.get(wx.getStorageSync("url") + "/type/" + x.id, {}).then(function (d) {
         //输出请求数据
-        console.log("req", d.data);
+        console.log("res", d.data);
         wx.setStorage({
           key: "goods",
           data: __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify___default()(x)
@@ -278,7 +279,7 @@ if (false) {(function () {
     },
 
     getQueryString: function getQueryString(url, name) {
-      var reg = new RegExp('(^|&|/?)' + name + '=([^&|/?]*)(&|/?|$)', 'i');
+      var reg = new RegExp("(^|&|/?)" + name + "=([^&|/?]*)(&|/?|$)", "i");
       var r = url.substr(1).match(reg);
       if (r != null) {
         return r[2];
@@ -288,7 +289,7 @@ if (false) {(function () {
   },
   created: function created() {},
   onLoad: function onLoad(options) {
-    console.log('options', options);
+    console.log("options", options);
 
     // 线上
     wx.setStorageSync("url", "https://feishou-baike.djiits.com");
@@ -298,8 +299,8 @@ if (false) {(function () {
       var q = decodeURIComponent(options.q);
       wx.setStorageSync("options", {
         share: true,
-        key1: this.getQueryString(q, 'key1'),
-        title: '大疆飞手百科'
+        key1: this.getQueryString(q, "key1"),
+        title: "大疆飞手百科"
       });
     } else {
       wx.setStorageSync("options", options);
@@ -309,14 +310,12 @@ if (false) {(function () {
     this.loading = false;
 
     var options = wx.getStorageSync("options");
-    console.log('k', options);
-
+    console.log("起始数据", options);
     wx.setStorageSync("options", {});
     wx.setStorageSync("share_player_page", "explain");
     if (options.share) {
       console.log("/pages/explain/main?share=true&key1=" + options.key1);
       wx.setStorageSync("o_key1", options.key1);
-
       this.showDetail(options);
     } else {
       this.loading = true;
@@ -331,11 +330,10 @@ if (false) {(function () {
   },
 
   onShareAppMessage: function onShareAppMessage() {
-    var x = wx.getStorageSync("share_childIndex") || {};
+    var x = wx.getStorageSync("share_explain") || {};
     if (!x.id) {
       x.id = wx.getStorageSync("o_key1");
     }
-
     var path = "/pages/explain/main?share=true&key1=" + x.id + "&title=" + this.title;
     return {
       title: this.title,

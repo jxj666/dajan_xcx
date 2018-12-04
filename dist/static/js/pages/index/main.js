@@ -136,7 +136,7 @@ if (false) {(function () {
   },
   methods: {
     hideSearchBox: function hideSearchBox() {
-      console.log(123);
+      // console.log(123);
       wx.setStorageSync("search_page", false);
 
       this.hideSearch = false;
@@ -147,6 +147,7 @@ if (false) {(function () {
       var data = wx.getStorageSync("index");
       console.log(data);
       if (!data) {
+        this.get_user();
         return;
       }
       this.dataList = data.data.data;
@@ -526,7 +527,11 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
       "searchNew": _vm.searchNew,
       "mpcomid": '2'
     }
-  })], 1) : _vm._e()])], 1)])
+  })], 1) : _vm._e()]), _vm._v(" "), _c('official-account', {
+    attrs: {
+      "mpcomid": '3'
+    }
+  })], 1)])
 }
 var staticRenderFns = []
 render._withStripped = true
