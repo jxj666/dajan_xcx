@@ -181,8 +181,8 @@ if (false) {(function () {
     scrollHeight_fix: function scrollHeight_fix() {
       var rule = 750 / wx.getSystemInfoSync().windowWidth;
       var height = wx.getSystemInfoSync().windowHeight;
-      this.scrollHeight = height * rule - (103 + 423) + "rpx";
-      return height * rule - (103 + 423) + "rpx";
+      this.scrollHeight = height * rule - (103 + 400) + "rpx";
+      return height * rule - (103 + 400) + "rpx";
     }
   },
 

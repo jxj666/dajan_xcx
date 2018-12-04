@@ -21,7 +21,7 @@
 }
 .videoBox.data-v-2e73f5bc {
   width: 737rpx;
-  height: 423rpx;
+  height: 400rpx;
   margin: 0 auto;
 }
 .videoBox ._video.data-v-2e73f5bc {
@@ -33,7 +33,7 @@
   top: 0;
   z-index: 100;
   width: 750rpx;
-  height: 423rpx;
+  height: 400rpx;
   left: 0;
   right: 0;
 }
